@@ -1,0 +1,149 @@
+<!DOCTYPE html><html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#000000">
+  <title>Training de Warrior</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #000;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #ff0000;
+      font-size: 2.5em;
+    }
+    .exercise-box {
+      background: linear-gradient(135deg, #ff0000, #ffff00, #00f);
+      color: #000;
+      padding: 20px;
+      border-radius: 20px;
+      margin: 20px auto;
+      width: 90%;
+      max-width: 400px;
+      font-weight: bold;
+    }
+    button {
+      background-color: #ff0000;
+      color: white;
+      border: none;
+      padding: 15px 25px;
+      margin: 10px;
+      font-size: 1em;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #cc0000;
+    }
+    .timer {
+      font-size: 3em;
+      margin: 20px 0;
+      color: #ffff00;
+    }
+    iframe {
+      margin-top: 30px;
+      width: 100%;
+      height: 380px;
+      border: none;
+      border-radius: 12px;
+    }
+    .footer {
+      margin-top: 40px;
+      color: #00f;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Training de Warrior</h1>
+  <div class="exercise-box" id="exerciseBox">Chargement...</div>
+  <button onclick="getRandomExercise()">Changer d'exo</button>
+  <button onclick="nextDay()">Jour suivant</button>
+  <button onclick="finishExercise()">J'ai fini</button>
+  <div class="timer" id="timer">03:00</div>
+  <button onclick="startTimer()">Démarrer</button>
+  <button onclick="resetTimer()">Réinitialiser</button>
+  <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1EIfS0ZRAzGri5?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+  <div class="footer">by BigDips</div>
+  <audio id="gong">
+    <source src="https://www.soundjay.com/button/beep-07.wav" type="audio/wav">
+  </audio>
+  <script>
+    const exercises = [
+      "5 min shadow boxing",
+      "3 rounds sac de frappe full power",
+      "2 min esquives + blocages",
+      "4x 30 sec burpees / 30 sec repos",
+      "10 pompes + 10 squats x 3",
+      "3 min corde à sauter",
+      "Combinaisons 1-2-3 devant miroir",
+      "Travail vitesse : 10 sec frappes rapides / 10 sec pause x6"
+    ];
+
+    const exerciseBox = document.getElementById("exerciseBox");
+
+    function getDayIndex() {
+      const now = new Date();
+      return now.getDate() % exercises.length;
+    }
+
+    function showTodayExercise() {
+      const index = getDayIndex();
+      exerciseBox.textContent = exercises[index];
+    }
+
+    function getRandomExercise() {
+      const index = Math.floor(Math.random() * exercises.length);
+      exerciseBox.textContent = exercises[index];
+    }
+
+    function nextDay() {
+      const tomorrow = (getDayIndex() + 1) % exercises.length;
+      exerciseBox.textContent = exercises[tomorrow];
+    }
+
+    function finishExercise() {
+      alert("Bien joué champion ! Tu peux en refaire un autre si t'es chaud 🔥");
+    }
+
+    // Timer
+    let timerInterval;
+    let timeLeft = 180;
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+      const seconds = (timeLeft % 60).toString().padStart(2, '0');
+      document.getElementById("timer").textContent = `${minutes}:${seconds}`;
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if (timeLeft > 0) {
+          timeLeft--;
+          updateTimerDisplay();
+        } else {
+          clearInterval(timerInterval);
+          document.getElementById("gong").play();
+          alert("Temps écoulé ! Fin du round 🥊");
+        }
+      }, 1000);
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      timeLeft = 180;
+      updateTimerDisplay();
+    }
+
+    // Init
+    showTodayExercise();
+    updateTimerDisplay();
+  </script>
+</body>
+</html>
